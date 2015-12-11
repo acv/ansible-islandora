@@ -1,16 +1,20 @@
 ---
 - hosts: all
+  roles:
+    - redouane.java
   tasks:
-  - name: ensure apt is up to date
-    apt: update_cache=yes cache_valid_time=3600
-  - name: ensure ntpd is at the latest version
-    apt: pkg=ntp state=latest
-    notify:
-    - restart ntpd
-  - include: tasks/web.yml
-  - include: tasks/mysql.yml
+    - name: ensure apt is up to date
+      apt: update_cache=yes cache_valid_time=3600
+    - name: ensure ntpd is at the latest version
+      apt: pkg=ntp state=latest
+      notify:
+        - restart ntpd
+    - include: tasks/web.yml
+    - include: tasks/mysql.yml
+    - include: tasks/tomcat7.yml
   handlers:
     - name: restart ntpd
       service: name=ntp state=restarted
     - include: handlers/web.yml
     - include: handlers/mysql.yml
+    - include: handlers/tomcat7.yml

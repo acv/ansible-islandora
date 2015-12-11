@@ -1,0 +1,16 @@
+---
+- name: Get default JVM link
+  stat: path=/usr/lib/jvm/default-java follow=false get_md5=no
+  register: java_stat
+- name: Create link if it doesn't exist
+  file: src=/usr/lib/jvm/java-8-oracle dest=/usr/lib/jvm/default-java state=link
+  when: java_stat.stat.exists == False
+- name: Ensure tomcat7 is installed
+  apt: pkg=tomcat7 state=latest
+  notify:
+    - restart tomcat7
+- name: Ensure tomcat7 will be started on boot
+  service: name=tomcat7 state=started enabled=yes
+  notify:
+    - restart tomcat7
+  
