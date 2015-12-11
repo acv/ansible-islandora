@@ -1,0 +1,10 @@
+---
+- name: ensure mysqld is installed
+  apt: name=mysql-server state=latest
+  notify:
+    - restart mysql
+- name: ensure php5-mysql installed
+  apt: name=php5-mysql state=latest
+  notify:
+    - restart apache2
+
